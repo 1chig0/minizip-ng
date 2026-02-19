@@ -155,7 +155,6 @@ low_cleanup:
 static void fuzz_high_level(const uint8_t *data, int32_t size, uint8_t control) {
     void *reader = NULL;
     mz_zip_file *file_info = NULL;
-    void *save_stream = NULL;
     int32_t save_len = 0;
     int32_t err = MZ_OK;
 
@@ -191,20 +190,13 @@ static void fuzz_high_level(const uint8_t *data, int32_t size, uint8_t control) 
                     free(save_buf);
                 }
             } else if (save_len > FUZZ_SAVE_MAX) {
-                /* Large entry: read in chunks using save stream */
-                save_stream = mz_stream_mem_create();
-                if (save_stream) {
-                    mz_stream_mem_open(save_stream, NULL,
-                                       MZ_OPEN_MODE_CREATE | MZ_OPEN_MODE_WRITE);
-                    /* Only read up to the cap */
-                    char chunk[FUZZ_READ_CHUNK];
-                    int32_t total = 0;
-                    while (total < FUZZ_SAVE_MAX) {
-                        int32_t r = mz_zip_reader_entry_read(reader, chunk, sizeof(chunk));
-                        if (r <= 0) break;
-                        total += r;
-                    }
-                    mz_stream_mem_delete(&save_stream);
+                /* Large entry: drain in chunks up to the cap */
+                char chunk[FUZZ_READ_CHUNK];
+                int32_t total = 0;
+                while (total < FUZZ_SAVE_MAX) {
+                    int32_t r = mz_zip_reader_entry_read(reader, chunk, sizeof(chunk));
+                    if (r <= 0) break;
+                    total += r;
                 }
             }
 

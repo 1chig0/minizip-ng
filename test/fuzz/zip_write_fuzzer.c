@@ -6,7 +6,7 @@
  *   - All supported compression methods: store, deflate, bzip2, lzma, zstd, ppmd
  *   - Both encryption types: PKWARE (traditional) and WinZip AES
  *   - ZIP64 mode (explicit zip64=1)
- *   - Extrafield data derived from fuzz input (C1: uint16_t extrafield overflow)
+ *   - Extrafield data derived from fuzz input (per-entry, up to MAX_EXTRA_LEN bytes)
  *   - Directory entries (triggers H1 path: attrib_is_dir check on filename)
  *   - Comment on archive and entries
  *   - Write + close + re-open (round-trip: exercises read-back of written data)
@@ -58,8 +58,8 @@ static const uint16_t compress_methods[] = {
 #ifdef HAVE_ZSTD
     MZ_COMPRESS_METHOD_ZSTD,
 #endif
-#ifdef HAVE_PPMDD
-    MZ_COMPRESS_METHOD_XZ,
+#ifdef HAVE_PPMD
+    MZ_COMPRESS_METHOD_PPMD,
 #endif
     MZ_COMPRESS_METHOD_DEFLATE,  /* duplicate for higher probability */
     MZ_COMPRESS_METHOD_STORE,

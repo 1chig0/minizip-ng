@@ -14,7 +14,7 @@
  *
  *   Each op is 4 bytes:
  *     byte 0: op_type (0=read, 1=seek_cur, 2=seek_set, 3=seek_end,
- *                      4=write, 5=get_buffer_at, 6=set_size, 7=tell)
+ *                      4=write, 5=tell, 6=read_large, 7=seek_back_and_read)
  *     bytes 1-3: little-endian 24-bit parameter (size / offset)
  */
 
