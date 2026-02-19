@@ -1044,10 +1044,16 @@ if(MZ_BUILD_FUZZ_TESTS)
 
     configure_fuzz_test(zip_fuzzer)
     configure_fuzz_test(unzip_fuzzer)
+    configure_fuzz_test(stream_fuzzer)
+    configure_fuzz_test(zip_read_fuzzer)
+    configure_fuzz_test(zip_write_fuzzer)
 
     if(NOT SKIP_INSTALL_BINARIES AND NOT SKIP_INSTALL_ALL)
         install(TARGETS zip_fuzzer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
         install(TARGETS unzip_fuzzer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+        install(TARGETS stream_fuzzer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+        install(TARGETS zip_read_fuzzer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+        install(TARGETS zip_write_fuzzer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
     endif()
 endif()
 
